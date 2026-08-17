@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나만의 주제탐구보고서 콘티</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --ink:#1E2A44; --paper:#F6F4EE; --card:#FFFFFF;
+  --red:#E4442C; --red-soft:#FDEBE7; --red-deep:#B22A17;
+  --green:#2E9E5B; --green-soft:#E7F5EC; --green-deep:#1C6B3C;
+  --violet:#5B5BD6; --violet-soft:#ECECFB; --violet-deep:#3C3CA8;
+  --muted:#6B7386;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{font-family:'Pretendard Variable',Pretendard,'Gowun Dodum',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-size:16px;
+ background-image:radial-gradient(#E5E1D5 1px, transparent 1px);background-size:22px 22px;}
+.wrap{max-width:720px;margin:0 auto;padding:0 18px 60px}
+.display{font-family:'Black Han Sans',sans-serif;font-weight:400;letter-spacing:.01em}
+
+/* ---------- 홈 ---------- */
+.hero{padding:52px 0 26px;text-align:center}
+.hero .eyebrow{display:inline-block;background:var(--ink);color:#fff;font-size:13px;padding:5px 14px;border-radius:999px;letter-spacing:.12em;margin-bottom:16px}
+.hero h1{font-size:clamp(34px,8vw,52px);line-height:1.2}
+.hero h1 .hl{color:var(--red)}
+.hero p{margin-top:14px;color:var(--muted);font-size:15px}
+.hero .sub{margin-top:6px;font-size:14px}
+
+.cards{display:flex;flex-direction:column;gap:18px;margin-top:26px}
+.card{position:relative;background:var(--card);border:2.5px solid var(--ink);border-radius:16px;padding:22px 20px 20px;cursor:pointer;
+ box-shadow:5px 6px 0 var(--ink);transition:transform .15s ease, box-shadow .15s ease;text-align:left;width:100%;font:inherit;color:inherit}
+.card:hover,.card:focus-visible{transform:translate(-2px,-2px);box-shadow:8px 9px 0 var(--ink);outline:none}
+.card:active{transform:translate(2px,3px);box-shadow:2px 2px 0 var(--ink)}
+.card .grade{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:13px;padding:4px 12px;border-radius:999px;border:2px solid var(--ink);margin-bottom:10px}
+.card.r1 .grade{background:var(--red-soft);color:var(--red-deep)}
+.card.r2 .grade{background:var(--green-soft);color:var(--green-deep)}
+.card.r3 .grade{background:var(--violet-soft);color:var(--violet-deep)}
+.card h2{font-size:20px;line-height:1.45;margin-bottom:6px;word-break:keep-all}
+.card .type{font-size:13px;font-weight:700;margin-bottom:8px}
+.card.r1 .type{color:var(--red)}
+.card.r2 .type{color:var(--green)}
+.card.r3 .type{color:var(--violet)}
+.card p{font-size:14px;color:var(--muted);word-break:keep-all}
+.card .go{position:absolute;right:16px;bottom:14px;font-weight:800;font-size:13px}
+.card .doodle{position:absolute;right:14px;top:14px;width:52px;height:52px}
+.homefoot{text-align:center;margin-top:34px;color:var(--muted);font-size:13px;line-height:1.9}
+
+/* ---------- 보고서 공통 ---------- */
+.report{display:none}
+.report.show{display:block;animation:fadein .35s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.report.show{animation:none}}
+#home.hide{display:none}
+
+.topbar{position:sticky;top:0;z-index:20;background:var(--paper);padding:12px 0;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink)}
+.backbtn{font:inherit;font-weight:800;font-size:14px;background:var(--card);border:2px solid var(--ink);border-radius:999px;padding:7px 16px;cursor:pointer;box-shadow:2px 3px 0 var(--ink)}
+.backbtn:active{transform:translate(1px,2px);box-shadow:0 0 0 var(--ink)}
+.topbar .where{font-size:13px;color:var(--muted);font-weight:700}
+
+.rhero{margin:26px 0 8px;padding:26px 22px 24px;border:2.5px solid var(--ink);border-radius:18px;position:relative;background:var(--card);box-shadow:6px 7px 0 var(--ink)}
+.rhero .chip{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.1em;padding:4px 12px;border-radius:999px;color:#fff;margin-bottom:12px}
+.rhero h2{font-size:clamp(24px,6vw,34px);line-height:1.35;word-break:keep-all}
+.rhero .meta{margin-top:14px;font-size:13.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px}
+.rhero .meta b{color:var(--ink)}
+.stamp{position:absolute;top:-16px;right:14px;width:72px;height:72px;border:3px solid var(--red);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--red);transform:rotate(10deg);background:rgba(255,255,255,.65);font-weight:900}
+.stamp .a{font-family:'Black Han Sans';font-size:26px;line-height:1}
+.stamp .s{font-size:10px;letter-spacing:.05em}
+
+.cut{background:var(--card);border:2.5px solid var(--ink);border-radius:16px;margin-top:26px;padding:20px 20px 22px;position:relative;box-shadow:4px 5px 0 var(--ink)}
+.cut .tab{position:absolute;top:-14px;left:16px;background:var(--ink);color:#fff;font-family:'Black Han Sans';font-size:13px;letter-spacing:.14em;padding:4px 14px;border-radius:8px}
+.cut h3{font-size:18px;margin:8px 0 10px;word-break:keep-all}
+.cut p{font-size:15px;word-break:keep-all;margin-bottom:10px}
+.cut p:last-child{margin-bottom:0}
+.cut .small{font-size:13px;color:var(--muted)}
+.figure{margin:14px auto;display:flex;justify-content:center}
+.caption{text-align:center;font-size:12.5px;color:var(--muted);margin-top:-4px;margin-bottom:8px}
+
+.qlist{list-style:none;display:flex;flex-direction:column;gap:10px;margin:6px 0}
+.qlist li{border:2px dashed;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;word-break:keep-all}
+.note{border-radius:12px;padding:12px 16px;font-size:14.5px;margin:12px 0;word-break:keep-all;border:2px solid}
+.kw{font-weight:800}
+
+.flow{display:flex;flex-direction:column;gap:0;margin:12px 0;align-items:stretch}
+.flow .step{border:2px solid var(--ink);border-radius:12px;padding:10px 14px;background:#fff;font-size:14.5px;font-weight:600;text-align:center;word-break:keep-all}
+.flow .arr{text-align:center;font-size:18px;line-height:1.4;font-weight:900}
+
+.bars{display:flex;flex-direction:column;gap:12px;margin:12px 0}
+.bar{display:grid;grid-template-columns:110px 1fr 44px;align-items:center;gap:10px;font-size:14px}
+.bar .label{font-weight:700;word-break:keep-all}
+.bar .track{background:#EDEBE2;border-radius:999px;height:18px;border:1.5px solid var(--ink);overflow:hidden}
+.bar .fill{height:100%;border-radius:999px}
+.bar .pct{font-weight:800;text-align:right}
+
+.sol{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.sol .s-item{border:2px solid var(--ink);border-radius:12px;padding:12px 14px;background:#fff}
+.sol .s-item b{display:block;margin-bottom:2px}
+.sol .s-item span{font-size:14px;color:var(--muted)}
+
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.vs .side{border:2.5px solid;border-radius:14px;padding:14px}
+.vs .side h4{font-size:15px;margin-bottom:8px}
+.vs .side ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.vs .side li{font-size:13.5px;line-height:1.55;word-break:keep-all;padding-left:14px;position:relative}
+.vs .side li::before{content:"·";position:absolute;left:2px;font-weight:900}
+@media (max-width:520px){.vs{grid-template-columns:1fr}}
+
+.termcard{display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.termcard .t-item{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:start;border-left:4px solid;padding:8px 4px 8px 14px;background:#fff;border-radius:0 10px 10px 0}
+.termcard .t-item b{font-size:14px}
+.termcard .t-item span{font-size:14px;word-break:keep-all}
+@media (max-width:460px){.termcard .t-item{grid-template-columns:1fr}}
+
+.reflist{list-style:none;counter-reset:ref;display:flex;flex-direction:column;gap:8px}
+.reflist li{counter-increment:ref;font-size:13.5px;color:var(--muted);padding-left:26px;position:relative;word-break:keep-all}
+.reflist li::before{content:"["counter(ref)"]";position:absolute;left:0;font-weight:800;color:var(--ink)}
+
+.teacher{margin-top:26px;border:2.5px solid var(--ink);border-radius:16px;background:#FFF9E3;padding:18px 20px;position:relative;box-shadow:4px 5px 0 var(--ink)}
+.teacher .who{font-weight:900;font-size:14px;margin-bottom:6px}
+.teacher p{font-size:14.5px;word-break:keep-all}
+.nextbox{margin-top:30px;display:flex;flex-direction:column;gap:12px}
+.nextbtn{font:inherit;font-weight:800;font-size:15px;border:2.5px solid var(--ink);border-radius:14px;padding:14px;background:var(--ink);color:#fff;cursor:pointer;box-shadow:4px 5px 0 rgba(30,42,68,.35)}
+.nextbtn.ghost{background:#fff;color:var(--ink)}
+.nextbtn:active{transform:translate(1px,2px)}
+table.mini{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+table.mini th,table.mini td{border:1.5px solid var(--ink);padding:8px 10px;text-align:center;word-break:keep-all}
+table.mini th{background:#F0EEE6;font-size:13px}
+.tag{display:inline-block;font-size:12px;font-weight:800;border:1.5px solid var(--ink);border-radius:999px;padding:2px 10px;margin-right:6px;background:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ================= 홈 ================= -->
+<section id="home">
+  <div class="hero">
+    <span class="eyebrow">ME : BRANDING · 브랜드 콘텐츠 갤러리</span>
+    <h1 class="display">나만의<br>주제탐구보고서 <span class="hl">콘티</span></h1>
+    <p>선배들의 A+ 탐구보고서 3편을 웹툰 콘티처럼 컷별로 구경해 보세요.</p>
+    <p class="sub">궁금한 보고서를 눌러 보세요 👇</p>
+  </div>
+
+  <div class="cards">
+    <button class="card r1" onclick="openReport('r1')">
+      <svg class="doodle" viewBox="0 0 60 60" aria-hidden="true"><path d="M30 14 C22 14 16 22 16 32 C16 44 24 52 30 52 C36 52 44 44 44 32 C44 22 38 14 30 14 Z" fill="#E4442C" stroke="#1E2A44" stroke-width="2.5"/><path d="M30 14 C30 8 34 5 39 6" fill="none" stroke="#2E9E5B" stroke-width="4" stroke-linecap="round"/><circle cx="25" cy="30" r="2.4" fill="#1E2A44"/><circle cx="35" cy="30" r="2.4" fill="#1E2A44"/><path d="M25 39 Q30 43 35 39" fill="none" stroke="#1E2A44" stroke-width="2.4" stroke-linecap="round"/><path d="M12 22 q-2 4 0 7 M48 22 q2 4 0 7" stroke="#5AA9E6" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      <span class="grade">🌱 1학년 · 호기심 탐구</span>
+      <h2>매운 걸 먹으면 왜 몸에서 불이 날까?</h2>
+      <div class="type">일상 속 "왜?"에 과학으로 답하기</div>
+      <p>떡볶이 한 접시에서 시작된 탐구. 매운맛의 정체는 사실 맛이 아니었다?!</p>
+      <span class="go">읽어보기 →</span>
+    </button>
+
+    <button class="card r2" onclick="openReport('r2')">
+      <svg class="doodle" viewBox="0 0 60 60" aria-hidden="true"><rect x="10" y="22" width="40" height="26" rx="5" fill="#2E9E5B" stroke="#1E2A44" stroke-width="2.5"/><rect x="15" y="27" width="13" height="9" rx="2" fill="#fff" stroke="#1E2A44" stroke-width="2"/><rect x="32" y="27" width="13" height="9" rx="2" fill="#fff" stroke="#1E2A44" stroke-width="2"/><rect x="15" y="39" width="30" height="5" rx="2" fill="#fff" stroke="#1E2A44" stroke-width="2"/><path d="M20 16 q2 -5 6 -3 M32 15 q3 -4 7 -2" stroke="#8C8C8C" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      <span class="grade">🌿 2학년 · 문제 해결 탐구</span>
+      <h2>우리 학교 급식 잔반 33% 줄이기 프로젝트</h2>
+      <div class="type">문제 발견 → 원인 분석 → 해결까지</div>
+      <p>매일 버려지는 잔반통을 그냥 지나치지 않았다. 설문 87명, 2주간의 실험 기록.</p>
+      <span class="go">읽어보기 →</span>
+    </button>
+
+    <button class="card r3" onclick="openReport('r3')">
+      <svg class="doodle" viewBox="0 0 60 60" aria-hidden="true"><rect x="16" y="18" width="28" height="24" rx="7" fill="#5B5BD6" stroke="#1E2A44" stroke-width="2.5"/><circle cx="26" cy="30" r="3" fill="#fff"/><circle cx="34" cy="30" r="3" fill="#fff"/><rect x="26" y="8" width="8" height="7" rx="2" fill="#5B5BD6" stroke="#1E2A44" stroke-width="2"/><path d="M20 48 h20 M24 44 v4 M36 44 v4" stroke="#1E2A44" stroke-width="2.4" stroke-linecap="round"/><path d="M46 20 l6 -6 M48 27 h7" stroke="#F2B705" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <span class="grade">🌳 3학년 · 교과·진로 연계 심화 탐구</span>
+      <h2>생성형 AI의 학습 데이터, 공정이용인가 무단 복제인가</h2>
+      <div class="type">사회 + 정보 교과 × AI 개발자 진로</div>
+      <p>논문처럼 서론·본론·결론을 갖춘 심화 탐구. 찬반이 팽팽한 최신 쟁점을 다룬다.</p>
+      <span class="go">읽어보기 →</span>
+    </button>
+  </div>
+
+  <p class="homefoot">💡 세 편 모두 거창한 지식이 아니라 <b>일상의 궁금증</b>에서 출발했어요.<br>다 읽었다면 워크북으로 돌아가 나의 탐구 주제를 캐 봅시다!</p>
+</section>
+
+<!-- ================= 보고서 1 : 중1 ================= -->
+<section id="r1" class="report">
+  <div class="topbar"><button class="backbtn" onclick="goHome()">← 목록</button><span class="where">1학년 · 나의 호기심 탐구 보고서</span></div>
+
+  <div class="rhero">
+    <span class="chip" style="background:var(--red)">CURIOSITY REPORT</span>
+    <h2 class="display">매운 걸 먹으면<br>왜 몸에서 불이 날까? 🔥</h2>
+    <div class="meta"><span>작성 <b>1학년 3반 김하늘</b></span><span>관련 교과 <b>과학</b></span><span>탐구 기간 <b>1주</b></span></div>
+    <div class="stamp"><span class="a">A+</span><span class="s">질문이 좋아요!</span></div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 01 · 탐구 동기</span>
+    <h3>사건의 시작: 엽기떡볶이 도전</h3>
+    <p>지난 주말, 친구들과 <span class="kw">아주 매운 떡볶이</span>에 도전했다. 세 입 만에 이마에 땀이 줄줄, 심장이 쿵쿵, 입에서는 불이 났다. 물을 벌컥벌컥 마셨는데… <b>더 매워졌다!</b></p>
+    <p>그 순간 궁금해졌다. <span class="kw">"매운맛의 정체는 대체 뭐길래 내 몸이 이렇게 반응하지?"</span></p>
+    <div class="figure">
+      <svg width="200" height="130" viewBox="0 0 200 130" role="img" aria-label="땀 흘리는 고추 캐릭터">
+        <path d="M100 30 C75 30 58 55 58 82 C58 110 82 124 100 124 C118 124 142 110 142 82 C142 55 125 30 100 30 Z" fill="#E4442C" stroke="#1E2A44" stroke-width="3"/>
+        <path d="M100 30 C100 16 110 9 124 12" fill="none" stroke="#2E9E5B" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="86" cy="72" r="5" fill="#1E2A44"/><circle cx="114" cy="72" r="5" fill="#1E2A44"/>
+        <ellipse cx="100" cy="95" rx="10" ry="7" fill="#7A1B0C"/>
+        <path d="M48 55 q-6 9 0 16 M152 55 q6 9 0 16" stroke="#5AA9E6" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M64 40 q-4 6 0 11 M136 40 q4 6 0 11" stroke="#5AA9E6" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M78 18 q3 -8 10 -6 M118 14 q5 -6 11 -3" stroke="#F2B705" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="caption">△ 그날의 나 (재현 일러스트)</p>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 02 · 핵심 질문</span>
+    <h3>이번 탐구에서 알아낼 것</h3>
+    <ul class="qlist">
+      <li style="border-color:var(--red);background:var(--red-soft)">Q1. 매운맛은 진짜 '맛'일까?</li>
+      <li style="border-color:var(--red);background:var(--red-soft)">Q2. 맵기만 한데 왜 땀이 나고 심장이 빨라질까?</li>
+      <li style="border-color:var(--red);background:var(--red-soft)">Q3. 물을 마셔도 왜 소용이 없을까? 진짜 해결책은?</li>
+    </ul>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 03 · 조사 결과 ①</span>
+    <h3>충격 사실: 매운맛은 '맛'이 아니라 '통증'이다</h3>
+    <p>과학책과 백과사전을 찾아보니, 혀가 느끼는 기본 맛은 <b>단맛·짠맛·신맛·쓴맛·감칠맛</b>의 다섯 가지뿐이었다. 매운맛은 그 목록에 없다!</p>
+    <p>고추 속 <span class="kw">캡사이신</span>이라는 물질이 혀에 있는 <span class="kw">TRPV1 수용체</span>를 자극하는데, 이 수용체는 원래 <b>약 43℃ 이상의 뜨거운 열</b>을 감지하는 통증 센서다. 즉 매운맛은 혀가 느끼는 <b>'뜨겁다!'는 통증 신호</b>였던 것이다.</p>
+    <div class="note" style="border-color:var(--red);background:var(--red-soft)">🔎 한 줄 정리 : 매운맛 = 미각이 아니라 <b>통각(아픔)</b>. 그래서 혀뿐 아니라 피부에 닿아도 화끈거린다!</div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 04 · 조사 결과 ②</span>
+    <h3>뇌의 착각이 만든 몸의 소동</h3>
+    <p>캡사이신이 TRPV1을 누르면, 뇌는 실제로 입안이 불타는 줄 알고 <b>비상 대응</b>을 시작한다.</p>
+    <div class="flow">
+      <div class="step">🌶 캡사이신이 TRPV1 수용체 자극</div>
+      <div class="arr">↓</div>
+      <div class="step">🧠 뇌의 착각 : "입안이 43℃ 이상! 뜨겁다!"</div>
+      <div class="arr">↓</div>
+      <div class="step">💦 몸을 식히려 땀 분비 + 심장 박동 증가</div>
+      <div class="arr">↓</div>
+      <div class="step">😊 통증을 달래려 엔도르핀 분비 → 묘한 쾌감!</div>
+    </div>
+    <p class="small">※ 스트레스 받을 때 매운 게 당기는 이유도 이 엔도르핀 때문이라고 한다. 몸은 속고 있지만 기분은 좋아지는 셈!</p>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 05 · 미니 실험</span>
+    <h3>물 vs 우유, 무엇이 매운맛을 잡을까?</h3>
+    <p>캡사이신은 물에 잘 녹지 않는 <span class="kw">지용성(기름에 녹는 성질)</span> 물질이다. 그래서 물을 마시면 캡사이신이 씻겨 나가기는커녕 입안에 <b>더 넓게 퍼진다.</b> 반면 우유 속 지방과 <span class="kw">카제인 단백질</span>은 캡사이신을 붙잡아 씻어내 준다.</p>
+    <p>정말 그럴까? 가족 3명에게 같은 매운 소스를 맛보게 하고, 물과 우유로 진정되는 시간을 재 보았다.</p>
+    <table class="mini">
+      <tr><th></th><th>💧 물 마셨을 때</th><th>🥛 우유 마셨을 때</th></tr>
+      <tr><td>아빠</td><td>약 95초</td><td>약 40초</td></tr>
+      <tr><td>동생</td><td>약 110초</td><td>약 55초</td></tr>
+      <tr><td>나</td><td>약 90초</td><td>약 35초</td></tr>
+    </table>
+    <p class="caption">△ "매운 느낌이 절반으로 줄었다"고 느낄 때까지 걸린 시간 (자체 측정)</p>
+    <div class="note" style="border-color:var(--red);background:var(--red-soft)">🏆 실험 결과 : 세 명 모두 <b>우유가 물보다 2배 이상 빨랐다!</b> 조사한 과학 원리와 일치했다.</div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 06 · 알게 된 점</span>
+    <h3>탐구 요약 세 줄</h3>
+    <ul class="qlist">
+      <li style="border-color:var(--ink)">① 매운맛은 맛이 아니라 <b>통증</b>이다. (TRPV1 = 열 감지 센서)</li>
+      <li style="border-color:var(--ink)">② 땀과 두근거림은 뇌가 "뜨겁다"고 <b>착각</b>해서 벌어지는 비상 대응이다.</li>
+      <li style="border-color:var(--ink)">③ 캡사이신은 지용성 → 물보다 <b>우유</b>가 효과적이다.</li>
+    </ul>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 07 · 느낀 점</span>
+    <h3>떡볶이 한 접시가 과학이 되다</h3>
+    <p>늘 먹던 떡볶이에 수용체, 지용성, 호르몬 같은 과학이 숨어 있다는 게 신기했다. <b>궁금한 것을 끝까지 파고드니 일상이 다르게 보였다.</b> 다음에는 "민트초코는 왜 시원하게 느껴질까?"(힌트: 차가움을 감지하는 TRPM8 수용체!)를 탐구해 보고 싶다.</p>
+  </div>
+
+  <div class="teacher">
+    <div class="who">👩‍🏫 선생님의 한마디 — 이 보고서가 A+인 이유</div>
+    <p>① 일상의 경험에서 <b>자기만의 질문</b>을 뽑아냈고 ② 조사로 끝내지 않고 <b>직접 실험으로 확인</b>했으며 ③ 다음 탐구 주제까지 이어 갔어요. 탐구는 이렇게 꼬리에 꼬리를 무는 것!</p>
+  </div>
+
+  <div class="nextbox">
+    <button class="nextbtn" onclick="openReport('r2')">다음 보고서 : 2학년 급식 잔반 프로젝트 →</button>
+    <button class="nextbtn ghost" onclick="goHome()">목록으로 돌아가기</button>
+  </div>
+</section>
+
+<!-- ================= 보고서 2 : 중2 ================= -->
+<section id="r2" class="report">
+  <div class="topbar"><button class="backbtn" onclick="goHome()">← 목록</button><span class="where">2학년 · 원인 분석 & 문제 해결 보고서</span></div>
+
+  <div class="rhero">
+    <span class="chip" style="background:var(--green)">PROBLEM SOLVING REPORT</span>
+    <h2 class="display">우리 학교 급식 잔반<br>33% 줄이기 프로젝트 🍽</h2>
+    <div class="meta"><span>작성 <b>2학년 5반 이준서</b></span><span>관련 교과 <b>사회 · 환경</b></span><span>탐구 기간 <b>3주</b></span></div>
+    <div class="stamp"><span class="a">A+</span><span class="s">실천까지 완벽!</span></div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 01 · 문제 발견</span>
+    <h3>매일 지나치던 잔반통 앞에 멈춰 서다</h3>
+    <p>점심시간이 끝날 무렵 급식실 잔반통은 늘 가득 차 있다. 영양사 선생님께 여쭤 보니 우리 학교에서는 <b>하루 평균 약 57kg</b>의 음식물이 버려진다고 했다. 한 달이면 1톤이 넘는 양이다.</p>
+    <p>음식물 쓰레기는 처리 비용도 들고, 처리 과정에서 <span class="kw">온실가스</span>도 나온다. "이건 그냥 지나칠 수 없는 문제다!"</p>
+    <div class="figure">
+      <svg width="230" height="120" viewBox="0 0 230 120" role="img" aria-label="급식판과 잔반통 일러스트">
+        <rect x="12" y="40" width="110" height="66" rx="10" fill="#2E9E5B" stroke="#1E2A44" stroke-width="3"/>
+        <rect x="24" y="52" width="36" height="24" rx="4" fill="#fff" stroke="#1E2A44" stroke-width="2"/>
+        <rect x="68" y="52" width="42" height="24" rx="4" fill="#fff" stroke="#1E2A44" stroke-width="2"/>
+        <rect x="24" y="82" width="86" height="14" rx="4" fill="#fff" stroke="#1E2A44" stroke-width="2"/>
+        <path d="M160 50 L196 50 L192 106 L164 106 Z" fill="#8FBF9F" stroke="#1E2A44" stroke-width="3"/>
+        <rect x="154" y="42" width="48" height="10" rx="4" fill="#1E2A44"/>
+        <path d="M168 32 q3 -8 9 -6 M184 30 q4 -6 9 -4" stroke="#8C8C8C" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <text x="178" y="84" font-size="16" text-anchor="middle" font-weight="800" fill="#1E2A44">57kg</text>
+      </svg>
+    </div>
+    <p class="caption">△ 하루 평균 잔반량 57kg = 학생 1인당 약 70g</p>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 02 · 탐구 계획</span>
+    <h3>감이 아니라 데이터로 접근하자</h3>
+    <p>"학생들이 왜 남길까?"를 추측 대신 <b>조사</b>로 밝히기로 했다.</p>
+    <ul class="qlist">
+      <li style="border-color:var(--green);background:var(--green-soft)">📋 우리 학년 학생 <b>87명 설문조사</b> — 급식을 남기는 가장 큰 이유는?</li>
+      <li style="border-color:var(--green);background:var(--green-soft)">⚖️ <b>5일간 잔반량 기록</b> — 메뉴에 따라 잔반이 어떻게 달라지는지 관찰</li>
+    </ul>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 03 · 원인 분석</span>
+    <h3>설문 결과: 남기는 이유 TOP 4</h3>
+    <div class="bars">
+      <div class="bar"><span class="label">싫어하는 반찬</span><div class="track"><div class="fill" style="width:42%;background:var(--green)"></div></div><span class="pct">42%</span></div>
+      <div class="bar"><span class="label">양 조절 불가</span><div class="track"><div class="fill" style="width:31%;background:#5CB87F"></div></div><span class="pct">31%</span></div>
+      <div class="bar"><span class="label">시간 부족</span><div class="track"><div class="fill" style="width:18%;background:#9AD3AE"></div></div><span class="pct">18%</span></div>
+      <div class="bar"><span class="label">기타</span><div class="track"><div class="fill" style="width:9%;background:#C9E7D2"></div></div><span class="pct">9%</span></div>
+    </div>
+    <p>흥미로운 발견은 <b>2위 "양 조절 불가"(31%)</b>였다. 싫어서가 아니라, <b>처음부터 너무 많이 받아서</b> 남기는 학생이 3명 중 1명이었던 것. 잔반 기록에서도 국·나물 반찬이 나온 날 잔반이 급증했다.</p>
+    <div class="note" style="border-color:var(--green);background:var(--green-soft)">💡 핵심 원인 진단 : 잔반은 "입맛" 문제만이 아니라 <b>"배식 시스템" 문제</b>이기도 하다!</div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 04 · 해결 방안</span>
+    <h3>내가 제안하는 3가지 작전</h3>
+    <div class="sol">
+      <div class="s-item"><b>작전 1️⃣ 배식량 선택제</b><span>배식대 앞에서 "적게 / 보통 / 많이" 팻말을 가리키면 그만큼만! → 원인 2위(양 조절)를 직접 해결</span></div>
+      <div class="s-item"><b>작전 2️⃣ 이달의 리퀘스트 메뉴</b><span>월 1회, 학생 투표 1위 메뉴를 급식에 반영 → 원인 1위(싫어하는 반찬)의 불만을 줄임</span></div>
+      <div class="s-item"><b>작전 3️⃣ 잔반 그래프 게시판</b><span>그날의 잔반량을 급식실 앞에 그래프로 공개 → 반별 대항전처럼 게임화!</span></div>
+    </div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 05 · 실천과 결과</span>
+    <h3>2주 시범 운영, 숫자가 달라졌다</h3>
+    <p>담임 선생님과 영양사 선생님의 도움으로 <b>작전 1(배식량 선택제)</b>을 우리 학년 배식대에서 2주간 시범 운영했다.</p>
+    <table class="mini">
+      <tr><th></th><th>시행 전 (하루 평균)</th><th>시행 후 (하루 평균)</th></tr>
+      <tr><td>우리 학년 잔반량</td><td>약 21kg</td><td><b>약 14kg (▼ 33%)</b></td></tr>
+    </table>
+    <div class="note" style="border-color:var(--green);background:var(--green-soft)">📉 팻말 하나로 잔반 <b>3분의 1 감소!</b> 작은 시스템 변화가 큰 차이를 만들었다.</div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 06 · 결론 & 제안</span>
+    <h3>이 탐구가 향하는 곳</h3>
+    <p>잔반 문제의 해답은 "남기지 말자"는 캠페인 구호가 아니라, <b>남기지 않아도 되는 구조</b>를 만드는 것이었다. 시범 결과를 정리해 <span class="kw">학생회와 급식소위원회에 배식량 선택제 전교 확대를 정식 건의</span>할 계획이다.</p>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 07 · 느낀 점</span>
+    <h3>불평 대신 데이터를 들다</h3>
+    <p>예전엔 "급식 맛없어"라고 불평만 했는데, 데이터를 모아 보니 문제의 진짜 모양이 보였고, 해결의 열쇠도 보였다. <b>세상을 바꾸는 건 큰 목소리가 아니라 정확한 관찰</b>이라는 걸 배웠다.</p>
+  </div>
+
+  <div class="teacher">
+    <div class="who">👨‍🏫 선생님의 한마디 — 이 보고서가 A+인 이유</div>
+    <p>① 문제를 <b>숫자(57kg)</b>로 보여 주며 시작했고 ② 설문·기록으로 <b>원인을 증거와 함께</b> 밝혔으며 ③ 제안에서 멈추지 않고 <b>실천해서 결과(▼33%)까지 검증</b>했어요. 문제 해결 탐구의 정석!</p>
+  </div>
+
+  <div class="nextbox">
+    <button class="nextbtn" onclick="openReport('r3')">다음 보고서 : 3학년 AI와 저작권 심화 탐구 →</button>
+    <button class="nextbtn ghost" onclick="goHome()">목록으로 돌아가기</button>
+  </div>
+</section>
+
+<!-- ================= 보고서 3 : 중3 ================= -->
+<section id="r3" class="report">
+  <div class="topbar"><button class="backbtn" onclick="goHome()">← 목록</button><span class="where">3학년 · 교과·진로 연계 심화 탐구 보고서</span></div>
+
+  <div class="rhero">
+    <span class="chip" style="background:var(--violet)">ADVANCED RESEARCH REPORT</span>
+    <h2 class="display">생성형 AI의 학습 데이터,<br>공정이용인가 무단 복제인가 🤖</h2>
+    <div class="meta"><span>작성 <b>3학년 2반 박서연</b></span><span>관련 교과 <b>사회 · 정보</b></span><span>희망 진로 <b>AI 개발자</b></span></div>
+    <div class="stamp"><span class="a">A+</span><span class="s">논리가 탄탄!</span></div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 01 · Ⅰ. 서론</span>
+    <h3>연구 배경과 목적</h3>
+    <p><b>[연구 배경]</b> 최근 웹툰 작가와 일러스트레이터들이 "AI가 우리 그림을 <span class="kw">허락 없이 학습</span>해 비슷한 그림을 만들어 낸다"며 반발하는 뉴스를 보았다. AI 개발자를 꿈꾸는 나에게 이 문제는 남의 일이 아니었다. 기술의 발전과 창작자의 권리, 둘 다 소중하다면 어디서 균형을 찾아야 할까?</p>
+    <p><b>[연구 목적]</b> 생성형 AI의 학습 데이터 사용을 둘러싼 쟁점을 양측의 논리와 실제 사례를 통해 분석하고, 나의 관점을 제시한다.</p>
+    <ul class="qlist">
+      <li style="border-color:var(--violet);background:var(--violet-soft)">연구 질문 ① AI 학습은 저작권법상 '공정이용'으로 볼 수 있는가?</li>
+      <li style="border-color:var(--violet);background:var(--violet-soft)">연구 질문 ② 기술 발전과 창작자 보호가 공존할 방안은 무엇인가?</li>
+    </ul>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 02 · Ⅱ-1. 개념 정리</span>
+    <h3>먼저 용어부터 정확하게</h3>
+    <div class="termcard">
+      <div class="t-item" style="border-color:var(--violet)"><b>생성형 AI</b><span>방대한 텍스트·이미지 데이터를 학습해 새로운 글·그림을 만들어 내는 인공지능. 학습 데이터의 상당수가 인터넷의 창작물이다.</span></div>
+      <div class="t-item" style="border-color:var(--violet)"><b>저작권</b><span>창작자가 자신의 창작물에 대해 갖는 법적 권리. 허락 없는 복제·배포는 원칙적으로 침해가 된다.</span></div>
+      <div class="t-item" style="border-color:var(--violet)"><b>공정이용</b><span>교육·연구·비평 등 일정 조건에서는 허락 없이도 저작물을 이용할 수 있게 한 예외 제도. AI 학습이 여기에 해당하는지가 논쟁의 핵심!</span></div>
+    </div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 03 · Ⅱ-2. 쟁점 분석</span>
+    <h3>팽팽하게 맞서는 두 입장</h3>
+    <div class="figure">
+      <svg width="220" height="110" viewBox="0 0 220 110" role="img" aria-label="저울 위의 AI와 저작권">
+        <path d="M110 18 v56" stroke="#1E2A44" stroke-width="4"/>
+        <path d="M40 34 L180 34" stroke="#1E2A44" stroke-width="4" stroke-linecap="round"/>
+        <path d="M40 34 l-14 26 h28 z" fill="#5B5BD6" stroke="#1E2A44" stroke-width="2.5"/>
+        <path d="M180 34 l-14 26 h28 z" fill="#F2B705" stroke="#1E2A44" stroke-width="2.5"/>
+        <circle cx="110" cy="18" r="7" fill="#1E2A44"/>
+        <path d="M84 92 h52 M92 84 v8 M128 84 v8" stroke="#1E2A44" stroke-width="4" stroke-linecap="round"/>
+        <text x="40" y="80" font-size="11" text-anchor="middle" font-weight="800" fill="#1E2A44">기술 혁신</text>
+        <text x="180" y="80" font-size="11" text-anchor="middle" font-weight="800" fill="#1E2A44">창작자 권리</text>
+      </svg>
+    </div>
+    <div class="vs">
+      <div class="side" style="border-color:var(--violet);background:var(--violet-soft)">
+        <h4>⚙️ "공정이용이다" 측</h4>
+        <ul>
+          <li>AI는 작품을 그대로 복제하는 게 아니라 <b>패턴을 학습</b>해 새로운 결과물을 만든다 (변형적 이용).</li>
+          <li>학습을 막으면 <b>기술 혁신이 늦어지고</b>, 자본이 큰 기업만 데이터를 확보하게 된다.</li>
+          <li>인간도 다른 작품을 보고 배워서 창작한다 — AI 학습도 유사한 과정이다.</li>
+        </ul>
+      </div>
+      <div class="side" style="border-color:#C29200;background:#FFF6DC">
+        <h4>🎨 "권리 침해다" 측</h4>
+        <ul>
+          <li>창작자의 <b>동의도, 보상도 없이</b> 작품이 통째로 학습에 쓰였다.</li>
+          <li>AI 결과물이 원작자의 <b>시장을 대체</b>한다 — 작가 그림체를 흉내 낸 AI 그림이 실제로 팔린다.</li>
+          <li>"배움"과 달리 AI 학습은 <b>상업적 대량 복제</b>에 가깝다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 04 · Ⅱ-3. 실제 사례</span>
+    <h3>지금 세계에서 벌어지는 일</h3>
+    <ul class="qlist">
+      <li style="border-color:var(--violet)">📰 <b>뉴욕타임스 vs 오픈AI·마이크로소프트</b> — 2023년 말, 뉴욕타임스는 자사 기사가 무단으로 AI 학습에 쓰였다며 소송을 제기했다.</li>
+      <li style="border-color:var(--violet)">🖼 <b>게티이미지 vs 스태빌리티AI</b> — 이미지 회사 게티는 자사 사진 수백만 장이 허락 없이 학습에 사용됐다고 주장하며 소송 중이다.</li>
+      <li style="border-color:var(--violet)">🇰🇷 <b>국내 창작 플랫폼의 대응</b> — 일부 웹툰·일러스트 플랫폼은 약관에 "AI 학습 목적 이용 금지"를 명시하기 시작했다.</li>
+    </ul>
+    <p class="small">※ 아직 법원의 최종 판단이 확정되지 않은 사건들로, 결과에 따라 AI 산업의 규칙이 크게 달라질 수 있다.</p>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 05 · Ⅲ. 결론</span>
+    <h3>나의 판단과 제언</h3>
+    <p>탐구 결과, 나는 <b>"기술이냐 창작자냐"의 양자택일이 아니라, 둘이 공존하는 규칙을 새로 만드는 것</b>이 답이라고 판단했다. 이를 위해 세 가지를 제안한다.</p>
+    <div class="sol">
+      <div class="s-item"><b>제언 1️⃣ 학습 거부권(옵트아웃) 보장</b><span>창작자가 "내 작품은 학습에 쓰지 마세요"라고 선택할 수 있어야 한다.</span></div>
+      <div class="s-item"><b>제언 2️⃣ 데이터 보상 체계 마련</b><span>학습에 쓰인 작품의 창작자에게 수익 일부가 돌아가는 구조가 필요하다.</span></div>
+      <div class="s-item"><b>제언 3️⃣ 학습 데이터 출처 공개</b><span>AI 기업이 무엇을 학습시켰는지 투명하게 밝혀야 신뢰가 생긴다.</span></div>
+    </div>
+    <div class="note" style="border-color:var(--violet);background:var(--violet-soft)">🎯 <b>진로와의 연결</b> : 이번 탐구로 나는 "코드를 잘 짜는 개발자"를 넘어 <b>"권리와 윤리를 아는 AI 개발자"</b>가 되고 싶다는 목표가 생겼다. 고등학교에서 사회(법과 사회)와 정보 교과를 연계해 이 주제를 이어서 탐구할 것이다.</div>
+  </div>
+
+  <div class="cut">
+    <span class="tab">CUT 06 · Ⅳ. 참고문헌</span>
+    <h3>이 탐구가 딛고 선 자료들</h3>
+    <ol class="reflist">
+      <li>한국저작권위원회 누리집, 「저작권과 공정이용 제도 안내」.</li>
+      <li>문화체육관광부·한국저작권위원회(2023), 『생성형 AI 저작권 안내서』.</li>
+      <li>국내외 언론 보도 — 뉴욕타임스의 오픈AI 상대 소송 관련 기사(2023.12.) 외.</li>
+      <li>학교 도서관 소장 도서, 『인공지능 시대의 법과 윤리』.</li>
+    </ol>
+    <p class="small">※ 출처를 밝히는 것은 심화 탐구 보고서의 기본 매너! 어디서 본 정보인지 꼭 기록해 두자.</p>
+  </div>
+
+  <div class="teacher">
+    <div class="who">👩‍🏫 선생님의 한마디 — 이 보고서가 A+인 이유</div>
+    <p>① 서론-본론-결론-참고문헌의 <b>논문형 구조</b>를 갖췄고 ② 한쪽 편만 들지 않고 <b>양측 논리를 공정하게</b> 비교했으며 ③ 결론을 <b>자신의 진로 목표</b>로 연결했어요. 고등학교 세특에서 빛나는 바로 그 유형!</p>
+  </div>
+
+  <div class="nextbox">
+    <button class="nextbtn" onclick="openReport('r1')">처음 보고서 : 1학년 매운맛 탐구 다시 보기 →</button>
+    <button class="nextbtn ghost" onclick="goHome()">목록으로 돌아가기</button>
+  </div>
+</section>
+
+</div>
+<script>
+function openReport(id){
+  document.getElementById('home').classList.add('hide');
+  document.querySelectorAll('.report').forEach(function(r){r.classList.remove('show');});
+  document.getElementById(id).classList.add('show');
+  window.scrollTo({top:0,behavior:'auto'});
+}
+function goHome(){
+  document.querySelectorAll('.report').forEach(function(r){r.classList.remove('show');});
+  document.getElementById('home').classList.remove('hide');
+  window.scrollTo({top:0,behavior:'auto'});
+}
+</script>
+</body>
+</html>
